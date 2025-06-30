@@ -1,24 +1,31 @@
-variable,lower,median,upper,distribution,label,Description
-farm_size,2,NA,6,norm,Farm Size (ha),Total cultivated area under cocoa production in hectares
-cocoa_density,400,NA,700,norm,density of cocoa on farm,number of cocoa trees on the farm
-,,,,,,
-dry_year_incidence,0.001,NA,0.05,tnorm_0_1,Dry Year Incidence (probability),Likelihood of experiencing a dry year affecting cocoa yield
-dry_year_damage,0.3,NA,0.6,tnorm_0_1,Dry Year Damage (yield loss fraction),Estimated fraction of yield lost due to dry years
-heavy_rainfall_incidence,0.1,NA,0.4,tnorm_0_1,Heavy Rainfall Incidence (probability),Probability of excessive rainfall during the season
-heavy_rainfall_damage,0.05,NA,0.4,tnorm_0_1,Heavy Rainfall Damage (yield loss or multiplier),Loss or increased disease risk from heavy rain
-cocoa_pest_and_disease_incidence,0.5,NA,0.9,tnorm_0_1,Cocoa Pest and Disease Incidence (probability),Frequency of pest and disease occurrence
-cocoa_pest_and_disease_damage,0.05,NA,0.8,tnorm_0_1,Cocoa Pest and Disease Damage (yield loss fraction),Yield loss caused by pests and diseases
-labor_price,30000,NA,60000,norm,Labor Price (CFA/month/person),Monthly wage per worker in CFA
-labor_persons_full_time,0,NA,2,norm,Full-time Labor (persons),Number of full-time workers employed year-round
-labor_persons_seasonal,1,NA,5,norm,Seasonal Labor (persons),Number of workers hired during harvest season
-fertilizer_cost,500,NA,1000,norm,Fertilizer Cost (CFA/kg),Price per kilogram of fertilizer in CFA
-fertilizer_amount,1,NA,1.01,norm,Fertilizer Amount (kg),Quantity of fertilizer applied (kg)
-pesticide_cost,23000,NA,35000,norm,Pesticide Cost (CFA),Total cost of pesticide treatments based on farm size
-pesticide_frequency,5,NA,15,norm,Pesticide Frequency (treatments/year),Number of pesticide applications per year
-family_labor,1,NA,3,norm,Family Labor Cost (CFA/year),Estimated value of unpaid family labor annually
-cocoa_price_world_market,278.17926,NA,3461.43288,norm,World Market Cocoa Price (CFA/kg),Global price of cocoa in CFA per kg
-cocoa_price_percent_farmgate,0.45,NA,1.1,norm,Farmgate Price Share (fraction of world price),Portion of global price received by farmers
-pesticide_effect,1,NA,1.028,norm,pesticide efficiency,pesticide application effect on yield
-pest_increase_rain,1.1,NA,1.5,norm,rain effect on pest pressure,pest incidence increase after rain
-fertilizer_effect,1.1,NA,1.5,norm,fertilizer effect on yield,fertilizer effect on yield
-tree_density,200,NA,500,norm,density of trees on farm,number of timber trees on the farm
+variable,lower,median,upper,distribution,label,Description,
+farm_size,2,NA,6,norm,Farm Size (ha),Total cultivated area under cocoa production in hectares,
+dry_year_incidence,0.001,NA,0.05,tnorm_0_1,Dry Year Incidence (probability),Likelihood of experiencing a dry year affecting cocoa yield,
+dry_year_damage,0.3,NA,0.6,tnorm_0_1,Dry Year Damage (yield loss fraction),Estimated fraction of yield lost due to dry years,
+heavy_rainfall_incidence,0.1,NA,0.4,tnorm_0_1,Heavy Rainfall Incidence (probability),Probability of excessive rainfall during the season,
+heavy_rainfall_damage,0.05,NA,0.4,tnorm_0_1,Heavy Rainfall Damage (yield loss or multiplier),Loss or increased disease risk from heavy rain,
+cocoa_pest_and_disease_incidence,0.5,NA,0.9,tnorm_0_1,Cocoa Pest and Disease Incidence (probability),Frequency of pest and disease occurrence,
+cocoa_pest_and_disease_damage,0.05,NA,0.8,tnorm_0_1,Cocoa Pest and Disease Damage (yield loss fraction),Yield loss caused by pests and diseases,
+labor_price,30000,NA,60000,norm,Labor Price (CFA/month/person),Monthly wage per worker in CFA,
+labor_persons_full_time,0,NA,2,norm,Full-time Labor (persons),Number of full-time workers employed year-round,
+labor_persons_seasonal,1,NA,5,norm,Seasonal Labor (persons),Number of workers hired during harvest season,
+fertilizer_cost,500,NA,1000,norm,Fertilizer Cost (CFA/kg),Price per kilogram of fertilizer in CFA,
+fertilizer_amount,1,NA,1.01,norm,Fertilizer Amount (kg),Quantity of fertilizer applied (kg),
+pesticide_cost,23000,NA,35000,norm,Pesticide Cost (CFA),Total cost of pesticide treatments based on farm size,
+pesticide_frequency,5,NA,15,norm,Pesticide Frequency (treatments/year),Number of pesticide applications per year,
+family_labor,1,NA,3,norm,Family Labor Cost (CFA/year),Estimated value of unpaid family labor annually,
+cocoa_harvest,200,NA,600,norm,Cocoa Harvest (kg),Total annual cocoa yield (based on farm size),https://doi.org/10.1016/j.agsy.2024.104111
+cocoa_price_world_market,278.17926,NA,3461.43288,norm,World Market Cocoa Price (CFA/kg),Global price of cocoa in CFA per kg,
+cocoa_price_percent_farmgate,0.45,NA,1.1,norm,Farmgate Price Share (fraction of world price),Portion of global price received by farmers,
+pesticide_effect,1,NA,1.028,norm,pesticide efficiency,pesticide application effect on yield,
+pest_increase_rain,1.1,NA,1.5,norm,rain effect on pest pressure,pest incidence increase after rain,
+fertilizer_effect,1.1,NA,1.5,norm,fertilizer effect on yield,fertilizer effect on yield,
+,,,,,,,
+tree_density,400,NA,650,norm,density of trees on farm,,https://doi.org/10.1016/j.agsy.2024.104111
+tree_growth_diam,4.5,NA,6.5,norm,diameter growth per tree per year,,"https://prota.prota4u.org/protav8.asp?h=M4&t=Erythrophleum,ivorense&p=Erythrophleum+ivorense#Synonyms"
+tree_growth_height,1.5,NA,2.5,norm,height increase per tree per year,,"https://prota.prota4u.org/protav8.asp?h=M4&t=Erythrophleum,ivorense&p=Erythrophleum+ivorense#Synonyms"
+tree_survival_rate,0.7,NA,0.9,tnorm_0_1,tree survival rate upon establishment,,
+tree_price,167879,NA,279798,norm,price that farmers could receive per m(3) at farmgate,,facebook
+tree_seedlings,2000,NA,3000,norm,price for seedlings,,facebook
+seedling_and_equipment_transport,80000,NA,120000,norm,price for transport and gas,,
+labor_persons_establishment,5,NA,10,norm,personnel for establishment labor per ha,,
