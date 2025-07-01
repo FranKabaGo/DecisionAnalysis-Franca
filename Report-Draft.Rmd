@@ -272,14 +272,14 @@ model_function_group53 <- function() {
   overall_cost_cocoa <- pesticide_and_fertilizer_cost + labor_cost
   
   #establishment costs timber
-  seedlings_cost<-c(tree_seedlings*tree_density*farm_size, rep(0, n_years-1))
-  transport_cost<-c(seedling_and_equipment_transport, rep(0, n_years-1))
-  establishment_labor<-c(labor_persons_establishment*(labor_price_30[1])*farm_size*3, rep(0,n_years-1))
+  seedlings_cost<-c(tree_seedlings*tree_density*farm_size)
+  transport_cost<-c(seedling_and_equipment_transport)
+  establishment_labor<-c(labor_persons_establishment*(labor_price_30[1])*farm_size*3)
   establishment_cost<-seedlings_cost+transport_cost+establishment_labor
-  maintenance_labor_persons<-c(2*farm_size_30)
+  maintenance_labor_persons<-c(farm_size_30)
   maintenance_labor_cost<-maintenance_labor_persons*labor_price_30
-  harvest_cost<-c(rep(0,n_years-1),harvest_material*labor_persons_harvest*labor_price_30[n_years]*farm_size*3)
-  overall_cost_timber<-c(establishment_cost[1],maintenance_labor_cost[2:(n_years-1)],harvest_cost[n_years])
+  harvest_cost<-c(harvest_material*labor_persons_harvest*labor_price_30[n_years]*farm_size*3)
+  overall_cost_timber<-c(establishment_cost,maintenance_labor_cost[2:(n_years-1)],harvest_cost)
   
 
   #impact to cocoa production intercropped with timber
@@ -296,18 +296,19 @@ model_function_group53 <- function() {
   dt_timber_diameter<-vv(tree_growth_diam, 5, n_years)
   final_diameter<-60
   dt_timber_height<-vv(tree_growth_height,5,n_years)
-  final_height<-sum(dt_timber_height)*100
+  final_height<-2000
   timber_cm3<-farm_size*tree_density*(final_diameter/2)^2*pi*final_height
   timber_m3<-timber_cm3/1000000
   income_timber<-c(rep(0,29), timber_m3*tree_price)
   
   # Estimate the final results from the model
-  final_cashflow <- ((income_cocoa+income_timber) - (overall_cost_cocoa+overall_cost_timber))
+  final_cashflow <- (income_timber) - (overall_cost_timber)
   # Generate the list of outputs from the Monte Carlo simulation
   final_result <- sum(income_cocoa+income_timber - overall_cost_cocoa+overall_cost_timber)
  return(list(final_result = final_result,
              final_cashflow = final_cashflow))
 }
+
 
 #applying the decision support package
 mc_simulation3 <-
