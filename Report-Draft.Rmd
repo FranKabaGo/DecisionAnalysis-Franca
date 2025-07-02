@@ -178,6 +178,8 @@ plot_cashflow(mcSimulation_object = mc_simulation2, cashflow_var_name = "final_c
               color_25_75 = "lightblue", color_5_95 = "lavenderblush3",
               color_median = "purple")
 ```
+
+
 ## Integration of timber trees
 ```{r, echo = FALSE}
 Variables_intervention<-read.csv("Variables_Agroforestry_Timber_clean.csv", row.names = 1)
@@ -271,16 +273,6 @@ model_function_group53 <- function() {
   
   overall_cost_cocoa <- pesticide_and_fertilizer_cost + labor_cost
   
-  #establishment costs timber
-  seedlings_cost<-c(tree_seedlings*tree_density*farm_size)
-  transport_cost<-c(seedling_and_equipment_transport)
-  establishment_labor<-c(labor_persons_establishment*(labor_price_30[1])*farm_size*3)
-  establishment_cost<-seedlings_cost+transport_cost+establishment_labor
-  maintenance_labor_persons<-c(farm_size_30)
-  maintenance_labor_cost<-maintenance_labor_persons*labor_price_30
-  harvest_cost<-c(harvest_material*labor_persons_harvest*labor_price_30[n_years]*farm_size*3)
-  overall_cost_timber<-c(establishment_cost,maintenance_labor_cost[2:(n_years-1)],harvest_cost)
-  
 
   #impact to cocoa production intercropped with timber
   yield_impact<-vv(impact_trees_cocoa, 10, n_years)
@@ -290,23 +282,37 @@ model_function_group53 <- function() {
     farm_size_30 * cocoa_harvest_30 * dry_years * rainy_years * cocoa_pest_and_diseases * (pesticide_frequency_30 * 1 +                                                           pesticide_effect_30) * (fertilizer_amount_30 * fertilizer_effect_30)*yield_impact
   
   #income from cocoa
-  income_cocoa <- cocoa_farm_harvest_complete * cocoa_price_world_market_30 * cocoa_price_percent_farmgate_30
+  income_cocoa <- cocoa_farm_harvest_complete * cocoa_price_world_market_30 * cocoa_price_percent_farmgate_30*yield_impact
+  
+ 
+  #establishment costs timber
+  seedlings_cost<-c(tree_seedlings*tree_density*farm_size)
+  transport_cost<-c(seedling_and_equipment_transport)
+  establishment_labor<-c(labor_persons_establishment*(labor_price_30[1])*farm_size*3)
+  establishment_cost<-seedlings_cost+transport_cost+establishment_labor
+  maintenance_labor_persons<-c(farm_size_30)
+  maintenance_labor_cost<-maintenance_labor_persons*labor_price_30
+  harvest_cost<-c(harvest_material+labor_persons_harvest*labor_price_30[n_years]*farm_size*3)
+  overall_cost_timber<-c(establishment_cost,maintenance_labor_cost[2:(n_years-1)],harvest_cost)
+  
   
   #timber_returns
   dt_timber_diameter<-vv(tree_growth_diam, 5, n_years)
-  final_diameter<-60
+  final_diameter<-sum(tree_growth_diam)
   dt_timber_height<-vv(tree_growth_height,5,n_years)
-  final_height<-2000
+  final_height<-sum(tree_growth_height)
   timber_cm3<-farm_size*tree_density*(final_diameter/2)^2*pi*final_height
   timber_m3<-timber_cm3/1000000
-  income_timber<-c(rep(0,29), timber_m3*tree_price)
+  income_timber<-c(rep(0,n_years-1), timber_m3*tree_price)
   
   # Estimate the final results from the model
-  final_cashflow <- (income_timber) - (overall_cost_timber)
+  final_cashflow <- (income_cocoa)+(income_timber) - (overall_cost_cocoa+overall_cost_timber)
   # Generate the list of outputs from the Monte Carlo simulation
   final_result <- sum(income_cocoa+income_timber - overall_cost_cocoa+overall_cost_timber)
- return(list(final_result = final_result,
-             final_cashflow = final_cashflow))
+  final_result_cocoa <- sum(income_cocoa - overall_cost_cocoa)
+ return(list(final_result_af = final_result,
+             final_cashflow_af = final_cashflow,
+             final_result_mono = final_result_cocoa))
 }
 
 
@@ -320,15 +326,22 @@ mc_simulation3 <-
   )
 plot_distributions(
   mcSimulation_object = mc_simulation3,
-  vars = "final_result",
-  method = "smooth_simple_overlay",
-  old_names = "final_result",
-  new_names = "Outcome distribution for profits"
+  vars =c("final_result_af", "final_result_mono"),
+  method = "smooth_simple_overlay"
 )
-plot_cashflow(mcSimulation_object = mc_simulation3, cashflow_var_name = "final_cashflow",  x_axis_name = "Years with intervention",
+plot_cashflow(mcSimulation_object = mc_simulation3, cashflow_var_name = "final_cashflow_af",  x_axis_name = "Years with intervention",
               y_axis_name = "Annual cashflow in CFA",
               color_25_75 = "lightblue", color_5_95 = "lavenderblush3",
               color_median = "purple")
 
 ```
 
+```{r}
+mcSimulation_cocoa_income <- data.frame(mc_simulation3$x, 
+                                 mc_simulation3$y[1])
+
+evpi_cocoatimber <- multi_EVPI(mc = mcSimulation_cocoa_income, 
+                   first_out_var = "cocoa_price_world_market")
+plot_evpi(evpi_cocoatimber, decision_vars = "cocoa_price_world_market")
+
+```

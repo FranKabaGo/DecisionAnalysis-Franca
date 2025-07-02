@@ -21,11 +21,13 @@ pesticide_effect,1,NA,1.028,norm,pesticide efficiency,pesticide application effe
 pest_increase_rain,1.1,NA,1.5,norm,rain effect on pest pressure,pest incidence increase after rain
 fertilizer_effect,1.1,NA,1.5,norm,fertilizer effect on yield,fertilizer effect on yield
 tree_density,100,NA,200,norm,density of trees on farm,NA
+tree_growth_diam,4.5,NA,6.5,norm,diameter growth per tree per year,NA
+tree_growth_height,1.5,NA,2.5,norm,height increase per tree per year,NA
 tree_survival_rate,0.7,NA,0.9,tnorm_0_1,tree survival rate upon establishment,NA
-establishment_material,100000,NA,650000,norm,NA,NA
-wood_per_tree_m3,0.65,NA,1.41,norm,NA,NA
-tree_price_m3,167700,NA,251550,norm,price that farmers could receive per m(3) at farmgate,NA
+tree_price,16770,NA,33540,norm,price that farmers could receive per m(3) at farmgate,NA
+tree_seedlings,2000,NA,3000,norm,price for seedlings,NA
+seedling_and_equipment_transport,80000,NA,120000,norm,price for transport and gas,NA
 labor_persons_establishment,5,NA,10,norm,personnel for establishment labor per ha,NA
 impact_trees_cocoa,0.3,NA,0.5,tnorm_0_1,yield reduction by timber trees to cocoa,NA
 harvest_material,100000,NA,250000,norm,material for harvest,NA
-labor_persons_harvest,5,NA,10,norm,personnel for harvest of timber per hectare,NA
+labor_persons_harvest,5,NA,10,norm,personnel for harvest of timber,NA
