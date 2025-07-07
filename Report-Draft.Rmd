@@ -282,7 +282,7 @@ model_function_group53 <- function() {
     farm_size_30 * cocoa_harvest_30 * dry_years * rainy_years * cocoa_pest_and_diseases * (pesticide_frequency_30 * 1 +                                                           pesticide_effect_30) * (fertilizer_amount_30 * fertilizer_effect_30)*yield_impact
   
   #income from cocoa
-  income_cocoa <- cocoa_farm_harvest_complete * cocoa_price_world_market_30 * cocoa_price_percent_farmgate_30*yield_impact
+  income_cocoa <- cocoa_farm_harvest_complete * cocoa_price_world_market_30 * cocoa_price_percent_farmgate_30
   
  
   #establishment costs timber
