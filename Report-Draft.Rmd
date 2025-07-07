@@ -341,7 +341,7 @@ mcSimulation_cocoa_income <- data.frame(mc_simulation3$x,
                                  mc_simulation3$y[1])
 
 evpi_cocoatimber <- multi_EVPI(mc = mcSimulation_cocoa_income, 
-                   first_out_var = "cocoa_price_world_market")
-plot_evpi(evpi_cocoatimber, decision_vars = "cocoa_price_world_market")
+                   first_out_var = "final_result_af")
+plot_evpi(evpi_cocoatimber, decision_vars = "final_result_af")
 
 ```
