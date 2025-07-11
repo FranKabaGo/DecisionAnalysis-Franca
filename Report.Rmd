@@ -6,6 +6,12 @@ output: pdf_document
 ---
 
 ```{r setup, include=FALSE}
+library(decisionSupport)
+library(ggplot2)
+library(kableExtra)
+library(ggplot2)
+library(plyr)
+library(dplyr)
 knitr::opts_chunk$set(echo = TRUE)
 make_variables <- function(est,n=1)
 { x<-random(rho=est, n=n)
@@ -138,16 +144,48 @@ model_function_group53 <- function() {
   timber_cm3<-((farm_size*tree_density)/30)*(harvest_diameter/2)^2*pi*harvest_height
   timber_m3<-timber_cm3/1000000
   timber_price_n<-vv(tree_price, 20, n_years, relative_trend = inflation_rate_world)
-  income_timber<-c(rep(0,n_years_first_harvest), c(timber_m3*timber_price_n[n_years_first_harvest:n_years])/30)
+  income_timber<-c(rep(0,n_years_first_harvest-1), c(timber_m3*timber_price_n[n_years_first_harvest:n_years])/30)
   
 #creating final cashflows and distributions
-   final_cashflow <- (income_cocoa)+(income_timber) - (overall_cost_cocoa+overall_cost_timber)
+   final_cashflow <- (income_cocoa)/559+(income_timber)/559 - (overall_cost_cocoa+overall_cost_timber)/559
   # Generate the list of outputs from the Monte Carlo simulation
-  final_result <- sum(income_cocoa+income_timber - overall_cost_cocoa+overall_cost_timber)
-  final_result_cocoa <- sum(income_cocoa - overall_cost_cocoa)
+  final_result <- sum(income_cocoa/559+income_timber/559 - overall_cost_cocoa/559+overall_cost_timber/559)
+
  return(list(final_result_af = final_result,
              final_cashflow_af = final_cashflow))
 }
 
+#applying the decision support package
+mc_simulation3 <-
+  mcSimulation(
+    estimate = as.estimate(Variables_intervention),
+    model_function = model_function_group53,
+    numberOfModelRuns = 1000,
+    functionSyntax = "plainNames"
+  )
+```
+##Visualizing results
+The result can be visualized in a density distribution.
+```{r}
+plot_distributions(
+  mcSimulation_object = mc_simulation3,
+  vars =c("final_result_af"),
+  method = "smooth_simple_overlay")
+```
+Alternatively, a cashflow can help to understand the general trends over the long development of n_years.
+```{r}
+plot_cashflow(mcSimulation_object = mc_simulation3, cashflow_var_name = "final_cashflow_af",  x_axis_name = "Years with intervention",
+              y_axis_name = "Annual cashflow in CFA",
+              color_25_75 = "lightblue", color_5_95 = "lavenderblush3",
+              color_median = "purple")
+```
+##Value of information report
+```{r}
+mcSimulation_cocoa_income <- data.frame(mc_simulation3$x, 
+                                 mc_simulation3$y[1])
+
+evpi_cocoatimber <- multi_EVPI(mc = mcSimulation_cocoa_income, 
+                   first_out_var = "final_result_af")
+plot_evpi(evpi_cocoatimber, decision_vars = "final_result_af")
 ```
 
