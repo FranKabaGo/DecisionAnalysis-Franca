@@ -72,7 +72,7 @@ model_function_group53 <- function() {
 #considering costs
   #cocoa
   labor_price_n <- rep(0, n_years)
-  labor_price_n <- vv(labor_price, 5, n_years, relative_trend = inflation_rate_cameroon)
+  labor_price_n <- vv(labor_price, 5, n_years)
   family_labor_n <- rep(0, n_years)
   family_labor_n <- rep(family_labor, n_years)
   labor_persons_full_time_n <- rep(labor_persons_full_time, n_years)
@@ -85,11 +85,11 @@ model_function_group53 <- function() {
   fertilizer_cost_n <- rep(0, n_years)
   fertilizer_cost_n <- vv(fertilizer_cost, 20, n_years)
   fertilizer_amount_n <- rep(0, n_years)
-  fertilizer_amount_n <- vv(fertilizer_amount, 30, n_years, relative_trend = inflation_rate_cameroon)
-  fertilizer_effect_n <- vv(fertilizer_effect, 10, n_years, relative_trend = inflation_rate_cameroon)
+  fertilizer_amount_n <- vv(fertilizer_amount, 30, n_years)
+  fertilizer_effect_n <- vv(fertilizer_effect, 10, n_years)
   
   pesticide_cost_n <- rep(0, n_years)
-  pesticide_cost_n <- vv(pesticide_cost, 20, n_years, relative_trend = inflation_rate_cameroon)
+  pesticide_cost_n <- vv(pesticide_cost, 20, n_years)
   pesticide_frequency_n <- rep(pesticide_frequency, n_years)
   
   pesticide_and_fertilizer_cost <-
@@ -104,11 +104,11 @@ model_function_group53 <- function() {
   establishment_labor_cost<-c(labor_persons_establishment*(labor_price_n[1])*farm_size*
                               3)
   establishment_cost<-seedlings_cost+transport_cost+establishment_labor_cost
-  maintenance_labor_persons<-c(farm_size_n)
+  maintenance_labor_persons<-farm_size_n
   maintenance_labor_cost<-maintenance_labor_persons*labor_price_n
   harvest_cost<-(harvest_material+labor_persons_harvest*labor_price_n[n_years]*
                    farm_size*3)/n_years_first_harvest
-  harvest_cost_n<-c(rep(0, n_years_first_harvest),vv(harvest_cost, 5, (n_years-n_years_first_harvest), relative_trend=inflation_rate_cameroon))
+  harvest_cost_n<-c(rep(0, n_years_first_harvest),vv(harvest_cost, 5, (n_years-n_years_first_harvest)))
   
   overall_cost_timber<-c(establishment_cost,maintenance_labor_cost[2:(n_years-1)],
                          harvest_cost)
@@ -119,7 +119,7 @@ model_function_group53 <- function() {
   
   cocoa_price_world_market_n <- rep(0, n_years)
   cocoa_price_world_market_n <-
-    vv(cocoa_price_world_market, 30, n_years, relative_trend=inflation_rate_world)
+    vv(cocoa_price_world_market, 30, n_years)
   cocoa_price_percent_farmgate_n <- rep(0, n_years)
   cocoa_price_percent_farmgate_n <- vv(cocoa_price_percent_farmgate, 10, n_years)
   pesticide_effect_n <- rep(0, n_years)
@@ -143,7 +143,7 @@ model_function_group53 <- function() {
   harvest_height<-sapply(harvest_years, function(y) sum(dt_timber_height[1:y]))
   timber_cm3<-((farm_size*tree_density)/30)*(harvest_diameter/2)^2*pi*harvest_height
   timber_m3<-timber_cm3/1000000
-  timber_price_n<-vv(tree_price, 20, n_years, relative_trend = inflation_rate_world)
+  timber_price_n<-vv(tree_price, 20, n_years)
   income_timber<-c(rep(0,n_years_first_harvest-1), c(timber_m3*timber_price_n[n_years_first_harvest:n_years])/30)
   
 #creating final cashflows and distributions
