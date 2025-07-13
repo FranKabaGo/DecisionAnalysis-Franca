@@ -23,8 +23,10 @@ pesticide_effect,1.01,NA,1.028,norm,pesticide efficiency,pesticide application e
 pest_increase_rain,1.1,NA,1.5,norm,rain effect on pest pressure,pest incidence increase after rain
 fertilizer_effect,1.1,NA,1.5,norm,fertilizer effect on yield,fertilizer effect on yield
 tree_density,120,NA,200,norm,density of trees on farm,NA
-tree_growth_diam,4.5,NA,6.5,norm,diameter growth per tree per year,NA
-tree_growth_height,1.5,NA,2.5,norm,height increase per tree per year,NA
+tree_growth_diam,4.5,NA,6.5,norm,diameter growth per tree per year in mm,NA
+tree_growth_height,20,NA,50,norm,height increase per tree per year in cm,NA
+tree_initial_height,150,NA,200,norm,tree height at time of planting,NA
+tree_initial_diameter,5,NA,10,norm,tree diameter at planting in cm,
 tree_survival_rate,0.7,NA,0.9,tnorm_0_1,tree survival rate upon establishment,NA
 tree_price,167700,NA,279500,norm,price that farmers could receive per m(3) at farmgate,NA
 tree_seedlings,2000,NA,3000,norm,price for seedlings,NA

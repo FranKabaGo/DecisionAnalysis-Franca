@@ -23,8 +23,10 @@ pesticide_effect,1.01,NA,1.028,norm,pesticide efficiency,pesticide application e
 pest_increase_rain,1.1,NA,1.5,norm,rain effect on pest pressure,pest incidence increase after rain
 fertilizer_effect,1.1,NA,1.5,norm,fertilizer effect on yield,fertilizer effect on yield
 tree_density,120,NA,200,norm,density of trees on farm,NA
-tree_growth_diam,4.5,NA,6.5,norm,diameter growth per tree per year,NA
-tree_growth_height,1.5,NA,2.5,norm,height increase per tree per year,NA
+tree_growth_diam,4.5,NA,6.5,norm,diameter growth per tree per year in mm,NA
+tree_growth_height,1.5,NA,2.5,norm,height increase per tree per year in cm,NA
+tree_initial_height,150,NA,200,norm,tree height at time of planting,NA
+tree_initial_diameter,5,NA,10,norm,tree diameter at planting in cm,
 tree_survival_rate,0.7,NA,0.9,tnorm_0_1,tree survival rate upon establishment,NA
 tree_price,167700,NA,279500,norm,price that farmers could receive per m(3) at farmgate,NA
 tree_seedlings,2000,NA,3000,norm,price for seedlings,NA
@@ -37,52 +39,52 @@ labor_persons_harvest,5,NA,10,norm,personnel for harvest of timber,NA
 inflation_rate_cameroon,2,NA,7.5,posnorm,cameroonian inflation rate estimated from data 2000-2030(forecast),NA
 inflation_rate_world,2.6,NA,9,posnorm,global inflation rate estimated from data 2000-2030(forecast),NA
 cocoa_price_world_market_1,278.17926,NA,3461.43288,norm,World Market Cocoa Price (CFA/kg),Global price of cocoa in CFA per kg
-cocoa_price_world_market_2,278.17926,,,,,
-cocoa_price_world_market_3,278.17926,,,,,
-cocoa_price_world_market_4,278.17926,,,,,
-cocoa_price_world_market_5,278.17926,,,,,
-cocoa_price_world_market_6,278.17926,,,,,
-cocoa_price_world_market_7,278.17926,,,,,
-cocoa_price_world_market_8,278.17926,,,,,
-cocoa_price_world_market_9,278.17926,,,,,
-cocoa_price_world_market_10,278.17926,,,,,
-cocoa_price_world_market_11,278.17926,,,,,
-cocoa_price_world_market_12,278.17926,,,,,
-cocoa_price_world_market_13,278.17926,,,,,
-cocoa_price_world_market_14,278.17926,,,,,
-cocoa_price_world_market_15,278.17926,,,,,
-cocoa_price_world_market_16,278.17926,,,,,
-cocoa_price_world_market_17,278.17926,,,,,
-cocoa_price_world_market_18,278.17926,,,,,
-cocoa_price_world_market_19,278.17926,,,,,
-cocoa_price_world_market_20,278.17926,,,,,
-cocoa_price_world_market_21,278.17926,,,,,
-cocoa_price_world_market_22,278.17926,,,,,
-cocoa_price_world_market_23,278.17926,,,,,
-cocoa_price_world_market_24,278.17926,,,,,
-cocoa_price_world_market_25,278.17926,,,,,
-cocoa_price_world_market_26,278.17926,,,,,
-cocoa_price_world_market_27,278.17926,,,,,
-cocoa_price_world_market_28,278.17926,,,,,
-cocoa_price_world_market_29,278.17926,,,,,
-cocoa_price_world_market_30,278.17926,,,,,
-cocoa_price_world_market_31,278.17926,,,,,
-cocoa_price_world_market_32,278.17926,,,,,
-cocoa_price_world_market_33,278.17926,,,,,
-cocoa_price_world_market_34,278.17926,,,,,
-cocoa_price_world_market_35,278.17926,,,,,
-cocoa_price_world_market_36,278.17926,,,,,
-cocoa_price_world_market_37,278.17926,,,,,
-cocoa_price_world_market_38,278.17926,,,,,
-cocoa_price_world_market_39,278.17926,,,,,
-cocoa_price_world_market_40,278.17926,,,,,
-cocoa_price_world_market_41,278.17926,,,,,
-cocoa_price_world_market_42,278.17926,,,,,
-cocoa_price_world_market_43,278.17926,,,,,
-cocoa_price_world_market_44,278.17926,,,,,
-cocoa_price_world_market_45,278.17926,,,,,
-cocoa_price_world_market_46,278.17926,,,,,
-cocoa_price_world_market_47,278.17926,,,,,
-cocoa_price_world_market_48,278.17926,,,,,
-cocoa_price_world_market_49,278.17926,,,,,
-cocoa_price_world_market_50,278.17926,,,,,
+cocoa_price_world_market_2,278.17926,NA,3461.43288,norm,World Market Cocoa Price (CFA/kg),Global price of cocoa in CFA per kg
+cocoa_price_world_market_3,278.17926,NA,3461.43288,norm,World Market Cocoa Price (CFA/kg),Global price of cocoa in CFA per kg
+cocoa_price_world_market_4,278.17926,NA,3461.43288,norm,World Market Cocoa Price (CFA/kg),Global price of cocoa in CFA per kg
+cocoa_price_world_market_5,278.17926,NA,3461.43288,norm,World Market Cocoa Price (CFA/kg),Global price of cocoa in CFA per kg
+cocoa_price_world_market_6,278.17926,NA,3461.43288,norm,World Market Cocoa Price (CFA/kg),Global price of cocoa in CFA per kg
+cocoa_price_world_market_7,278.17926,NA,3461.43288,norm,World Market Cocoa Price (CFA/kg),Global price of cocoa in CFA per kg
+cocoa_price_world_market_8,278.17926,NA,3461.43288,norm,World Market Cocoa Price (CFA/kg),Global price of cocoa in CFA per kg
+cocoa_price_world_market_9,278.17926,NA,3461.43288,norm,World Market Cocoa Price (CFA/kg),Global price of cocoa in CFA per kg
+cocoa_price_world_market_10,278.17926,NA,3461.43288,norm,World Market Cocoa Price (CFA/kg),Global price of cocoa in CFA per kg
+cocoa_price_world_market_11,278.17926,NA,3461.43288,norm,World Market Cocoa Price (CFA/kg),Global price of cocoa in CFA per kg
+cocoa_price_world_market_12,278.17926,NA,3461.43288,norm,World Market Cocoa Price (CFA/kg),Global price of cocoa in CFA per kg
+cocoa_price_world_market_13,278.17926,NA,3461.43288,norm,World Market Cocoa Price (CFA/kg),Global price of cocoa in CFA per kg
+cocoa_price_world_market_14,278.17926,NA,3461.43288,norm,World Market Cocoa Price (CFA/kg),Global price of cocoa in CFA per kg
+cocoa_price_world_market_15,278.17926,NA,3461.43288,norm,World Market Cocoa Price (CFA/kg),Global price of cocoa in CFA per kg
+cocoa_price_world_market_16,278.17926,NA,3461.43288,norm,World Market Cocoa Price (CFA/kg),Global price of cocoa in CFA per kg
+cocoa_price_world_market_17,278.17926,NA,3461.43288,norm,World Market Cocoa Price (CFA/kg),Global price of cocoa in CFA per kg
+cocoa_price_world_market_18,278.17926,NA,3461.43288,norm,World Market Cocoa Price (CFA/kg),Global price of cocoa in CFA per kg
+cocoa_price_world_market_19,278.17926,NA,3461.43288,norm,World Market Cocoa Price (CFA/kg),Global price of cocoa in CFA per kg
+cocoa_price_world_market_20,278.17926,NA,3461.43288,norm,World Market Cocoa Price (CFA/kg),Global price of cocoa in CFA per kg
+cocoa_price_world_market_21,278.17926,NA,3461.43288,norm,World Market Cocoa Price (CFA/kg),Global price of cocoa in CFA per kg
+cocoa_price_world_market_22,278.17926,NA,3461.43288,norm,World Market Cocoa Price (CFA/kg),Global price of cocoa in CFA per kg
+cocoa_price_world_market_23,278.17926,NA,3461.43288,norm,World Market Cocoa Price (CFA/kg),Global price of cocoa in CFA per kg
+cocoa_price_world_market_24,278.17926,NA,3461.43288,norm,World Market Cocoa Price (CFA/kg),Global price of cocoa in CFA per kg
+cocoa_price_world_market_25,278.17926,NA,3461.43288,norm,World Market Cocoa Price (CFA/kg),Global price of cocoa in CFA per kg
+cocoa_price_world_market_26,278.17926,NA,3461.43288,norm,World Market Cocoa Price (CFA/kg),Global price of cocoa in CFA per kg
+cocoa_price_world_market_27,278.17926,NA,3461.43288,norm,World Market Cocoa Price (CFA/kg),Global price of cocoa in CFA per kg
+cocoa_price_world_market_28,278.17926,NA,3461.43288,norm,World Market Cocoa Price (CFA/kg),Global price of cocoa in CFA per kg
+cocoa_price_world_market_29,278.17926,NA,3461.43288,norm,World Market Cocoa Price (CFA/kg),Global price of cocoa in CFA per kg
+cocoa_price_world_market_30,278.17926,NA,3461.43288,norm,World Market Cocoa Price (CFA/kg),Global price of cocoa in CFA per kg
+cocoa_price_world_market_31,278.17926,NA,3461.43288,norm,World Market Cocoa Price (CFA/kg),Global price of cocoa in CFA per kg
+cocoa_price_world_market_32,278.17926,NA,3461.43288,norm,World Market Cocoa Price (CFA/kg),Global price of cocoa in CFA per kg
+cocoa_price_world_market_33,278.17926,NA,3461.43288,norm,World Market Cocoa Price (CFA/kg),Global price of cocoa in CFA per kg
+cocoa_price_world_market_34,278.17926,NA,3461.43288,norm,World Market Cocoa Price (CFA/kg),Global price of cocoa in CFA per kg
+cocoa_price_world_market_35,278.17926,NA,3461.43288,norm,World Market Cocoa Price (CFA/kg),Global price of cocoa in CFA per kg
+cocoa_price_world_market_36,278.17926,NA,3461.43288,norm,World Market Cocoa Price (CFA/kg),Global price of cocoa in CFA per kg
+cocoa_price_world_market_37,278.17926,NA,3461.43288,norm,World Market Cocoa Price (CFA/kg),Global price of cocoa in CFA per kg
+cocoa_price_world_market_38,278.17926,NA,3461.43288,norm,World Market Cocoa Price (CFA/kg),Global price of cocoa in CFA per kg
+cocoa_price_world_market_39,278.17926,NA,3461.43288,norm,World Market Cocoa Price (CFA/kg),Global price of cocoa in CFA per kg
+cocoa_price_world_market_40,278.17926,NA,3461.43288,norm,World Market Cocoa Price (CFA/kg),Global price of cocoa in CFA per kg
+cocoa_price_world_market_41,278.17926,NA,3461.43288,norm,World Market Cocoa Price (CFA/kg),Global price of cocoa in CFA per kg
+cocoa_price_world_market_42,278.17926,NA,3461.43288,norm,World Market Cocoa Price (CFA/kg),Global price of cocoa in CFA per kg
+cocoa_price_world_market_43,278.17926,NA,3461.43288,norm,World Market Cocoa Price (CFA/kg),Global price of cocoa in CFA per kg
+cocoa_price_world_market_44,278.17926,NA,3461.43288,norm,World Market Cocoa Price (CFA/kg),Global price of cocoa in CFA per kg
+cocoa_price_world_market_45,278.17926,NA,3461.43288,norm,World Market Cocoa Price (CFA/kg),Global price of cocoa in CFA per kg
+cocoa_price_world_market_46,278.17926,NA,3461.43288,norm,World Market Cocoa Price (CFA/kg),Global price of cocoa in CFA per kg
+cocoa_price_world_market_47,278.17926,NA,3461.43288,norm,World Market Cocoa Price (CFA/kg),Global price of cocoa in CFA per kg
+cocoa_price_world_market_48,278.17926,NA,3461.43288,norm,World Market Cocoa Price (CFA/kg),Global price of cocoa in CFA per kg
+cocoa_price_world_market_49,278.17926,NA,3461.43288,norm,World Market Cocoa Price (CFA/kg),Global price of cocoa in CFA per kg
+cocoa_price_world_market_50,278.17926,NA,3461.43288,norm,World Market Cocoa Price (CFA/kg),Global price of cocoa in CFA per kg
