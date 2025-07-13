@@ -13,18 +13,281 @@ library(ggplot2)
 library(plyr)
 library(dplyr)
 knitr::opts_chunk$set(echo = TRUE)
+#introducing the make variables function
 make_variables <- function(est,n=1)
 { x<-random(rho=est, n=n)
 for(i in colnames(x)) assign(i,
                              as.numeric(x[1,i]),envir=.GlobalEnv)}
+Variables_intervention<- read.csv("Variables_Agroforestry_Timber_clean.csv", row.names = 1)
+
 ```
 
+
+```{r Chance, echo = FALSE}
+
+cocoa_conventional<-read.csv("Variables_Agroforestry_Timber_clean.csv", row.names = 1)
+
+model_function_group52 <- function() {
+  #call variables
+  cocoa_conventional<-read.csv("Variables_Agroforestry_Timber_clean.csv", row.names = 1)
+  make_variables(as.estimate(cocoa_conventional))
+  #creating empty variables to integrate time
+  n_years <- 50
+  farm_size_n <- rep(0, n_years)
+  farm_size_n <- rep(farm_size, n_years)
+  
+  #risks
+  dry_years <- rep(0, n_years)
+  dry_years <- chance_event(
+    chance = dry_year_incidence,
+    value_if = 1 - dry_year_damage,
+    value_if_not = 1,
+    n = n_years)
+
+  
+  rainy_years <- rep(0, n_years)
+  rainy_years <- chance_event(
+    chance = heavy_rainfall_incidence,
+    value_if = 1 - heavy_rainfall_damage,
+    value_if_not = 1,
+    n = n_years
+  )
+  
+  cocoa_pest_and_diseases <- rep(0, n_years)
+  cocoa_pest_and_diseases <-
+    chance_event(
+      chance = cocoa_pest_and_disease_incidence,
+      value_if = 1 - cocoa_pest_and_disease_damage,
+      value_if_not = 1,
+      n = n_years
+    )
+  
+  #costs
+  labor_price_30 <- rep(0, n_years)
+  labor_price_30 <- vv(labor_price, 5, n_years)
+  family_labor_30 <- rep(0, n_years)
+  family_labor_30 <- rep(family_labor, n_years)
+  labor_persons_full_time_30 <-
+    rep(labor_persons_full_time, n_years)
+  labor_persons_seasonal_30 <- rep(labor_persons_seasonal, n_years)
+  
+  fertilizer_cost_30 <- rep(0, n_years)
+  fertilizer_cost_30 <- vv(fertilizer_cost, 20, n_years)
+  fertilizer_amount_30 <- rep(0, n_years)
+  fertilizer_amount_30 <- vv(fertilizer_amount, 30, n_years)
+  fertilizer_effect_30 <- vv(fertilizer_effect, 10, n_years)
+  
+  pesticide_cost_30 <- rep(0, n_years)
+  pesticide_cost_30 <- vv(pesticide_cost, 20, n_years)
+  pesticide_frequency_30 <- rep(pesticide_frequency, n_years)
+  
+  cocoa_harvest_30 <- rep(0, n_years)
+  cocoa_harvest_30 <- vv(cocoa_harvest, 5, n_years)
+  
+cocoa_price_world_market_n <-c(cocoa_price_world_market_1, cocoa_price_world_market_2, cocoa_price_world_market_3, cocoa_price_world_market_4, cocoa_price_world_market_5, cocoa_price_world_market_6, cocoa_price_world_market_7, cocoa_price_world_market_8, cocoa_price_world_market_9, cocoa_price_world_market_10, cocoa_price_world_market_11, cocoa_price_world_market_12, cocoa_price_world_market_13, cocoa_price_world_market_14, cocoa_price_world_market_15, cocoa_price_world_market_16, cocoa_price_world_market_17, cocoa_price_world_market_18, cocoa_price_world_market_19, cocoa_price_world_market_20,cocoa_price_world_market_21, cocoa_price_world_market_22, cocoa_price_world_market_23, cocoa_price_world_market_24, cocoa_price_world_market_25, cocoa_price_world_market_26, cocoa_price_world_market_27, cocoa_price_world_market_28, cocoa_price_world_market_29, cocoa_price_world_market_30, cocoa_price_world_market_31, cocoa_price_world_market_32, cocoa_price_world_market_33, cocoa_price_world_market_34, cocoa_price_world_market_35, cocoa_price_world_market_36, cocoa_price_world_market_37, cocoa_price_world_market_38, cocoa_price_world_market_39, cocoa_price_world_market_40, cocoa_price_world_market_41, cocoa_price_world_market_42, cocoa_price_world_market_43, cocoa_price_world_market_44, cocoa_price_world_market_45, cocoa_price_world_market_46, cocoa_price_world_market_47, cocoa_price_world_market_48, cocoa_price_world_market_49, cocoa_price_world_market_50)
+  
+  cocoa_price_percent_farmgate_30 <- rep(0, n_years)
+  cocoa_price_percent_farmgate_30 <-
+    vv(cocoa_price_percent_farmgate, 10, n_years)
+  pesticide_effect_30 <- rep(0, n_years)
+  pesticide_effect_30 <- rep(pesticide_effect, n_years)
+  pest_increase_rain_30 <- rep(0, n_years)
+  pest_increase_rain_30 <- rep(pest_increase_rain, n_years)
+  
+  
+  #formula for the harvest considering all production risks and management options
+  
+  
+  #calculating the actual cocoa harvest per farm
+  cocoa_farm_harvest_complete <-
+    farm_size * cocoa_harvest_30 * dry_years * rainy_years * cocoa_pest_and_diseases * (pesticide_frequency_30 * (1 +                                                  pesticide_effect_30) * (fertilizer_amount_30 * fertilizer_effect_30))
+  #income from cocoa
+  income <- cocoa_farm_harvest_complete * cocoa_price_world_market_n * cocoa_price_percent_farmgate_30
+  #labor_cost
+  labor_cost  <-
+    labor_persons_full_time_30 * 12 * labor_price_30 + labor_persons_seasonal_30 * 5 * labor_price_30 +
+    family_labor * labor_price * 12
+  
+  pesticide_and_fertilizer_cost <-
+    pesticide_cost_30 * farm_size_n * pesticide_frequency_30 + fertilizer_amount_30 *
+    fertilizer_cost_30
+  
+  overall_cost <- pesticide_and_fertilizer_cost + labor_cost
+  
+  # Estimate the final results from the model
+  final_cashflow <- income - overall_cost
+  # Generate the list of outputs from the Monte Carlo simulation
+  final_result_cocoa <- sum(income - overall_cost)
+ return(list(final_result_cocoa = final_result_cocoa/559,
+             final_cashflow = final_cashflow))
+}
+
+
+#applying the decision support package
+mc_simulation2 <-
+  mcSimulation(
+    estimate = as.estimate(cocoa_conventional),
+    model_function = model_function_group52,
+    numberOfModelRuns = 1000,
+    functionSyntax = "plainNames"
+  )
+plot_distributions(
+  mcSimulation_object = mc_simulation2,
+  vars = "final_result_cocoa",
+  method = "smooth_simple_overlay",
+  old_names = "final_result_cocoa",
+  new_names = "Outcome distribution for profits"
+)
+
+```
+---
+title: "Advanced Timber"
+author: "Franca Kaba Gómez"
+date: "2025-07-07"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+library(decisionSupport)
+library(ggplot2)
+library(kableExtra)
+library(ggplot2)
+library(plyr)
+library(dplyr)
+knitr::opts_chunk$set(echo = TRUE)
+#introducing the make variables function
+make_variables <- function(est,n=1)
+{ x<-random(rho=est, n=n)
+for(i in colnames(x)) assign(i,
+                             as.numeric(x[1,i]),envir=.GlobalEnv)}
+Variables_intervention<- read.csv("Variables_Agroforestry_Timber_clean.csv", row.names = 1)
+
+```
+
+
+```{r Chance, echo = FALSE}
+
+cocoa_conventional<-read.csv("Variables_Agroforestry_Timber_clean.csv", row.names = 1)
+
+model_function_group52 <- function() {
+  #call variables
+  cocoa_conventional<-read.csv("Variables_Agroforestry_Timber_clean.csv", row.names = 1)
+  make_variables(as.estimate(cocoa_conventional))
+  #creating empty variables to integrate time
+  n_years <- 50
+  farm_size_n <- rep(0, n_years)
+  farm_size_n <- rep(farm_size, n_years)
+  
+  #risks
+  dry_years <- rep(0, n_years)
+  dry_years <- chance_event(
+    chance = dry_year_incidence,
+    value_if = 1 - dry_year_damage,
+    value_if_not = 1,
+    n = n_years)
+
+  
+  rainy_years <- rep(0, n_years)
+  rainy_years <- chance_event(
+    chance = heavy_rainfall_incidence,
+    value_if = 1 - heavy_rainfall_damage,
+    value_if_not = 1,
+    n = n_years
+  )
+  
+  cocoa_pest_and_diseases <- rep(0, n_years)
+  cocoa_pest_and_diseases <-
+    chance_event(
+      chance = cocoa_pest_and_disease_incidence,
+      value_if = 1 - cocoa_pest_and_disease_damage,
+      value_if_not = 1,
+      n = n_years
+    )
+  
+  #costs
+  labor_price_30 <- rep(0, n_years)
+  labor_price_30 <- vv(labor_price, 5, n_years)
+  family_labor_30 <- rep(0, n_years)
+  family_labor_30 <- rep(family_labor, n_years)
+  labor_persons_full_time_30 <-
+    rep(labor_persons_full_time, n_years)
+  labor_persons_seasonal_30 <- rep(labor_persons_seasonal, n_years)
+  
+  fertilizer_cost_30 <- rep(0, n_years)
+  fertilizer_cost_30 <- vv(fertilizer_cost, 20, n_years)
+  fertilizer_amount_30 <- rep(0, n_years)
+  fertilizer_amount_30 <- vv(fertilizer_amount, 30, n_years)
+  fertilizer_effect_30 <- vv(fertilizer_effect, 10, n_years)
+  
+  pesticide_cost_30 <- rep(0, n_years)
+  pesticide_cost_30 <- vv(pesticide_cost, 20, n_years)
+  pesticide_frequency_30 <- rep(pesticide_frequency, n_years)
+  
+  cocoa_harvest_30 <- rep(0, n_years)
+  cocoa_harvest_30 <- vv(cocoa_harvest, 5, n_years)
+  
+cocoa_price_world_market_n <-c(cocoa_price_world_market_1, cocoa_price_world_market_2, cocoa_price_world_market_3, cocoa_price_world_market_4, cocoa_price_world_market_5, cocoa_price_world_market_6, cocoa_price_world_market_7, cocoa_price_world_market_8, cocoa_price_world_market_9, cocoa_price_world_market_10, cocoa_price_world_market_11, cocoa_price_world_market_12, cocoa_price_world_market_13, cocoa_price_world_market_14, cocoa_price_world_market_15, cocoa_price_world_market_16, cocoa_price_world_market_17, cocoa_price_world_market_18, cocoa_price_world_market_19, cocoa_price_world_market_20,cocoa_price_world_market_21, cocoa_price_world_market_22, cocoa_price_world_market_23, cocoa_price_world_market_24, cocoa_price_world_market_25, cocoa_price_world_market_26, cocoa_price_world_market_27, cocoa_price_world_market_28, cocoa_price_world_market_29, cocoa_price_world_market_30, cocoa_price_world_market_31, cocoa_price_world_market_32, cocoa_price_world_market_33, cocoa_price_world_market_34, cocoa_price_world_market_35, cocoa_price_world_market_36, cocoa_price_world_market_37, cocoa_price_world_market_38, cocoa_price_world_market_39, cocoa_price_world_market_40, cocoa_price_world_market_41, cocoa_price_world_market_42, cocoa_price_world_market_43, cocoa_price_world_market_44, cocoa_price_world_market_45, cocoa_price_world_market_46, cocoa_price_world_market_47, cocoa_price_world_market_48, cocoa_price_world_market_49, cocoa_price_world_market_50)
+  
+  cocoa_price_percent_farmgate_30 <- rep(0, n_years)
+  cocoa_price_percent_farmgate_30 <-
+    vv(cocoa_price_percent_farmgate, 10, n_years)
+  pesticide_effect_30 <- rep(0, n_years)
+  pesticide_effect_30 <- rep(pesticide_effect, n_years)
+  pest_increase_rain_30 <- rep(0, n_years)
+  pest_increase_rain_30 <- rep(pest_increase_rain, n_years)
+  
+  
+  #formula for the harvest considering all production risks and management options
+  
+  
+  #calculating the actual cocoa harvest per farm
+  cocoa_farm_harvest_complete <-
+    farm_size * cocoa_harvest_30 * dry_years * rainy_years * cocoa_pest_and_diseases * (pesticide_frequency_30 * (1 +                                                  pesticide_effect_30) * (fertilizer_amount_30 * fertilizer_effect_30))
+  #income from cocoa
+  income <- cocoa_farm_harvest_complete * cocoa_price_world_market_n * cocoa_price_percent_farmgate_30
+  #labor_cost
+  labor_cost  <-
+    labor_persons_full_time_30 * 12 * labor_price_30 + labor_persons_seasonal_30 * 5 * labor_price_30 +
+    family_labor * labor_price * 12
+  
+  pesticide_and_fertilizer_cost <-
+    pesticide_cost_30 * farm_size_n * pesticide_frequency_30 + fertilizer_amount_30 *
+    fertilizer_cost_30
+  
+  overall_cost <- pesticide_and_fertilizer_cost + labor_cost
+  
+  # Estimate the final results from the model
+  final_cashflow <- income - overall_cost
+  # Generate the list of outputs from the Monte Carlo simulation
+  final_result_cocoa <- sum(income - overall_cost)
+ return(list(final_result_cocoa = final_result_cocoa/559,
+             final_cashflow = final_cashflow))
+}
+
+
+#applying the decision support package
+mc_simulation2 <-
+  mcSimulation(
+    estimate = as.estimate(cocoa_conventional),
+    model_function = model_function_group52,
+    numberOfModelRuns = 1000,
+    functionSyntax = "plainNames"
+  )
+plot_distributions(
+  mcSimulation_object = mc_simulation2,
+  vars = "final_result_cocoa",
+  method = "smooth_simple_overlay",
+  old_names = "final_result_cocoa",
+  new_names = "Outcome distribution for profits"
+)
+
+```
 Idea: sell some timber each year from n=30, then continue.
 ```{r advanced timber, include=FALSE}
 
 model_function_group53 <- function() {
   #call variables
-  Variables_intervention<- read.csv("Variables_Agroforestry_Timber_clean.csv", row.names = 1)
+Variables_intervention<- read.csv("Variables_Agroforestry_Timber_clean.csv", row.names = 1)
   make_variables(as.estimate(Variables_intervention))
   #creating constant variables
   n_years <- 50
@@ -34,6 +297,92 @@ model_function_group53 <- function() {
   
   farm_size_n<-rep(farm_size, n_years)
   inflation_n<-runif(n_years, min=0.25, max=7.5)
+  
+  #cocoa monoculture
+  #risks
+  
+    dry_years <- rep(0, n_years)
+  dry_years <- chance_event(
+    chance = dry_year_incidence,
+    value_if = 1 - dry_year_damage,
+    value_if_not = 1,
+    n = n_years)
+
+  
+  rainy_years <- rep(0, n_years)
+  rainy_years <- chance_event(
+    chance = heavy_rainfall_incidence,
+    value_if = 1 - heavy_rainfall_damage,
+    value_if_not = 1,
+    n = n_years
+  )
+  
+  cocoa_pest_and_diseases <- rep(0, n_years)
+  cocoa_pest_and_diseases <-
+    chance_event(
+      chance = cocoa_pest_and_disease_incidence,
+      value_if = 1 - cocoa_pest_and_disease_damage,
+      value_if_not = 1,
+      n = n_years
+    )
+  
+  #costs
+  labor_price_30 <- rep(0, n_years)
+  labor_price_30 <- vv(labor_price, 5, n_years)
+  family_labor_30 <- rep(0, n_years)
+  family_labor_30 <- rep(family_labor, n_years)
+  labor_persons_full_time_30 <-
+    rep(labor_persons_full_time, n_years)
+  labor_persons_seasonal_30 <- rep(labor_persons_seasonal, n_years)
+  
+  fertilizer_cost_30 <- rep(0, n_years)
+  fertilizer_cost_30 <- vv(fertilizer_cost, 20, n_years)
+  fertilizer_amount_30 <- rep(0, n_years)
+  fertilizer_amount_30 <- vv(fertilizer_amount, 30, n_years)
+  fertilizer_effect_30 <- vv(fertilizer_effect, 10, n_years)
+  
+  pesticide_cost_30 <- rep(0, n_years)
+  pesticide_cost_30 <- vv(pesticide_cost, 20, n_years)
+  pesticide_frequency_30 <- rep(pesticide_frequency, n_years)
+  
+  cocoa_harvest_30 <- rep(0, n_years)
+  cocoa_harvest_30 <- vv(cocoa_harvest, 5, n_years)
+  
+cocoa_price_world_market_n <-c(cocoa_price_world_market_1, cocoa_price_world_market_2, cocoa_price_world_market_3, cocoa_price_world_market_4, cocoa_price_world_market_5, cocoa_price_world_market_6, cocoa_price_world_market_7, cocoa_price_world_market_8, cocoa_price_world_market_9, cocoa_price_world_market_10, cocoa_price_world_market_11, cocoa_price_world_market_12, cocoa_price_world_market_13, cocoa_price_world_market_14, cocoa_price_world_market_15, cocoa_price_world_market_16, cocoa_price_world_market_17, cocoa_price_world_market_18, cocoa_price_world_market_19, cocoa_price_world_market_20,cocoa_price_world_market_21, cocoa_price_world_market_22, cocoa_price_world_market_23, cocoa_price_world_market_24, cocoa_price_world_market_25, cocoa_price_world_market_26, cocoa_price_world_market_27, cocoa_price_world_market_28, cocoa_price_world_market_29, cocoa_price_world_market_30, cocoa_price_world_market_31, cocoa_price_world_market_32, cocoa_price_world_market_33, cocoa_price_world_market_34, cocoa_price_world_market_35, cocoa_price_world_market_36, cocoa_price_world_market_37, cocoa_price_world_market_38, cocoa_price_world_market_39, cocoa_price_world_market_40, cocoa_price_world_market_41, cocoa_price_world_market_42, cocoa_price_world_market_43, cocoa_price_world_market_44, cocoa_price_world_market_45, cocoa_price_world_market_46, cocoa_price_world_market_47, cocoa_price_world_market_48, cocoa_price_world_market_49, cocoa_price_world_market_50)
+  
+  cocoa_price_percent_farmgate_30 <- rep(0, n_years)
+  cocoa_price_percent_farmgate_30 <-
+    vv(cocoa_price_percent_farmgate, 10, n_years)
+  pesticide_effect_30 <- rep(0, n_years)
+  pesticide_effect_30 <- rep(pesticide_effect, n_years)
+  pest_increase_rain_30 <- rep(0, n_years)
+  pest_increase_rain_30 <- rep(pest_increase_rain, n_years)
+  
+  
+  #formula for the harvest considering all production risks and management options
+  
+  
+  #calculating the actual cocoa harvest per farm
+  cocoa_farm_harvest_complete <-
+    farm_size * cocoa_harvest_30 * dry_years * rainy_years * cocoa_pest_and_diseases * (pesticide_frequency_30 * (1 +                                                  pesticide_effect_30) * (fertilizer_amount_30 * fertilizer_effect_30))
+  #income from cocoa
+  income <- cocoa_farm_harvest_complete * cocoa_price_world_market_n * cocoa_price_percent_farmgate_30
+  #labor_cost
+  labor_cost  <-
+    labor_persons_full_time_30 * 12 * labor_price_30 + labor_persons_seasonal_30 * 5 * labor_price_30 +
+    family_labor * labor_price * 12
+  
+  pesticide_and_fertilizer_cost <-
+    pesticide_cost_30 * farm_size_n * pesticide_frequency_30 + fertilizer_amount_30 *
+    fertilizer_cost_30
+  
+  overall_cost <- pesticide_and_fertilizer_cost + labor_cost
+  
+  # Estimate the final results from the model
+  final_cashflow <- income - overall_cost
+  # Generate the list of outputs from the Monte Carlo simulation
+  final_result_cocoa <- sum(income - overall_cost)
+  
   
   #creating risks modified by tree presence
   
@@ -118,8 +467,9 @@ model_function_group53 <- function() {
   cocoa_harvest_n <- vv(cocoa_harvest, 5, n_years)
   
   cocoa_price_world_market_n <- rep(0, n_years)
-  cocoa_price_world_market_n <-
-    vv(cocoa_price_world_market, 30, n_years)
+  cocoa_price_world_market_n <-c(cocoa_price_world_market_1, cocoa_price_world_market_2, cocoa_price_world_market_3, cocoa_price_world_market_4, cocoa_price_world_market_5, cocoa_price_world_market_6, cocoa_price_world_market_7, cocoa_price_world_market_8, cocoa_price_world_market_9, cocoa_price_world_market_10, cocoa_price_world_market_11, cocoa_price_world_market_12, cocoa_price_world_market_13, cocoa_price_world_market_14, cocoa_price_world_market_15, cocoa_price_world_market_16, cocoa_price_world_market_17, cocoa_price_world_market_18, cocoa_price_world_market_19, cocoa_price_world_market_20,cocoa_price_world_market_21, cocoa_price_world_market_22, cocoa_price_world_market_23, cocoa_price_world_market_24, cocoa_price_world_market_25, cocoa_price_world_market_26, cocoa_price_world_market_27, cocoa_price_world_market_28, cocoa_price_world_market_29, cocoa_price_world_market_30, cocoa_price_world_market_31, cocoa_price_world_market_32, cocoa_price_world_market_33, cocoa_price_world_market_34, cocoa_price_world_market_35, cocoa_price_world_market_36, cocoa_price_world_market_37, cocoa_price_world_market_38, cocoa_price_world_market_39, cocoa_price_world_market_40, cocoa_price_world_market_41, cocoa_price_world_market_42, cocoa_price_world_market_43, cocoa_price_world_market_44, cocoa_price_world_market_45, cocoa_price_world_market_46, cocoa_price_world_market_47, cocoa_price_world_market_48, cocoa_price_world_market_49, cocoa_price_world_market_50)
+
+  
   cocoa_price_percent_farmgate_n <- rep(0, n_years)
   cocoa_price_percent_farmgate_n <- vv(cocoa_price_percent_farmgate, 10, n_years)
   pesticide_effect_n <- rep(0, n_years)
@@ -147,12 +497,229 @@ model_function_group53 <- function() {
   income_timber<-c(rep(0,n_years_first_harvest-1), c(timber_m3*timber_price_n[n_years_first_harvest:n_years])/30)
   
 #creating final cashflows and distributions
-   final_cashflow <- (income_cocoa)/559+(income_timber)/559 - (overall_cost_cocoa+overall_cost_timber)/559
+   final_cashflow <- (income_cocoa)+(income_timber) - (overall_cost_cocoa+overall_cost_timber)
   # Generate the list of outputs from the Monte Carlo simulation
-  final_result <- sum(income_cocoa/559+income_timber/559 - overall_cost_cocoa/559+overall_cost_timber/559)
+  final_result <- sum(income_cocoa+income_timber - overall_cost_cocoa+overall_cost_timber)
 
- return(list(final_result_af = final_result,
-             final_cashflow_af = final_cashflow))
+ return(list(final_result_af = final_result/559,
+             final_cashflow_af = final_cashflow/559,
+             final_result_cocoa = final_result_cocoa/559,
+             final_cashflow = final_cashflow))
+  return(list())
+}
+
+#applying the decision support package
+mc_simulation3 <-
+  mcSimulation(
+    estimate = as.estimate(Variables_intervention),
+    model_function = model_function_group53,
+    numberOfModelRuns = 1000,
+    functionSyntax = "plainNames"
+  )
+```
+##Visualizing results
+The result can be visualized in a density distribution.
+```{r}
+plot_distributions(
+  mcSimulation_object = mc_simulation3,
+  vars =c("final_result_af", "final_result_cocoa"),
+  method = "smooth_simple_overlay")
+```
+
+Alternatively, a cashflow can help to understand the general trends over the long development of n_years.
+```{r}
+plot_cashflow(mcSimulation_object = mc_simulation2, cashflow_var_name = "final_cashflow",  x_axis_name = "Years",
+              y_axis_name = "Annual cashflow in USD",
+              color_25_75 = "lightblue", color_5_95 = "lavenderblush3",
+              color_median = "purple")
+```
+##Value of information report
+```{r}
+mcSimulation_cocoa_income <- data.frame(mc_simulation2$x, 
+                                 mc_simulation2$y[1])
+
+evpi_cocoatimber <- multi_EVPI(mc = mcSimulation_cocoa_income, 
+                   first_out_var = "final_result_cocoa")
+plot_evpi(evpi_cocoatimber, decision_vars = "final_result_cocoa")
+```
+
+```{r}
+options(scipen = 999)
+
+# store Mc simultation outputs
+sim1 <- mc_simulation2$y[1]
+sim2 <- mc_simulation3$y[1]
+
+sim1_df <- as.data.frame(sim1)
+sim2_df <- as.data.frame(sim2)
+
+# Make sure column names match
+names(sim2_df) <- names(sim1_df)
+
+# Add simulation label to both
+sim1_df$simulation <- "Sim 1"
+sim2_df$simulation <- "Sim 2"
+
+# Now bind them
+combined <- rbind(sim1_df, sim2_df)
+
+# Combine both
+combined <- rbind(sim1_df, sim2_df)
+
+# Convert to long format for ggplot
+library(reshape2)
+combined_long <- melt(combined, id.vars = "simulation")
+
+# Plot
+ggplot(combined_long, aes(x = value, fill = simulation)) +
+  geom_density(alpha = 0.5) +
+  facet_wrap(~ variable, scales = "free") +
+  labs(title = "Overlay of Distributions", x = "Value", y = "Density")
+
+```
+
+
+
+Idea: sell some timber each year from n=30, then continue.
+```{r advanced timber, include=FALSE}
+
+model_function_group53 <- function() {
+  #call variables
+Variables_intervention<- read.csv("Variables_Agroforestry_Timber_clean.csv", row.names = 1)
+  make_variables(as.estimate(Variables_intervention))
+  #creating constant variables
+  n_years <- 50
+  n_years_first_harvest<-30
+  n_years_establishment<-5
+ 
+  
+  farm_size_n<-rep(farm_size, n_years)
+  inflation_n<-runif(n_years, min=0.25, max=7.5)
+  
+  #risks for cocoa monoculture
+  
+  
+  
+  
+  #creating risks modified by tree presence
+  
+  dry_years <- rep(0, n_years)
+  dry_years <- c(chance_event(
+    chance = dry_year_incidence,
+    value_if = 1 - dry_year_damage*dry_year_damage_establishment,
+    value_if_not = 1,
+    n = n_years_establishment),chance_event(
+    chance = dry_year_incidence,
+    value_if = 1 - dry_year_damage*dry_year_damage_establishment,
+    value_if_not = 1,
+    n = n_years-n_years_establishment))
+
+  
+  rainy_years <- rep(0, n_years)
+  rainy_years <- c(chance_event(
+    chance = heavy_rainfall_incidence,
+    value_if = 1 - heavy_rainfall_damage,
+    value_if_not = 1,
+    n = n_years_establishment), chance_event(
+    chance = heavy_rainfall_incidence,
+    value_if = 1 - heavy_rainfall_damage*heavy_rainfall_damage_established,
+    value_if_not = 1,
+    n = n_years-n_years_establishment)
+  )
+  
+  cocoa_pest_and_diseases <- rep(0, n_years)
+  cocoa_pest_and_diseases <-
+    chance_event(
+      chance = cocoa_pest_and_disease_incidence,
+      value_if = 1 - cocoa_pest_and_disease_damage,
+      value_if_not = 1,
+      n = n_years)
+  
+#considering costs
+  #cocoa
+  labor_price_n <- rep(0, n_years)
+  labor_price_n <- vv(labor_price, 5, n_years)
+  family_labor_n <- rep(0, n_years)
+  family_labor_n <- rep(family_labor, n_years)
+  labor_persons_full_time_n <- rep(labor_persons_full_time, n_years)
+  labor_persons_seasonal_n <- rep(labor_persons_seasonal, n_years)
+  
+  labor_cost  <-labor_persons_full_time_n * 12 * labor_price_n+
+  labor_persons_seasonal_n * 5 * labor_price_n +
+  family_labor * labor_price * 12
+  
+  fertilizer_cost_n <- rep(0, n_years)
+  fertilizer_cost_n <- vv(fertilizer_cost, 20, n_years)
+  fertilizer_amount_n <- rep(0, n_years)
+  fertilizer_amount_n <- vv(fertilizer_amount, 30, n_years)
+  fertilizer_effect_n <- vv(fertilizer_effect, 10, n_years)
+  
+  pesticide_cost_n <- rep(0, n_years)
+  pesticide_cost_n <- vv(pesticide_cost, 20, n_years)
+  pesticide_frequency_n <- rep(pesticide_frequency, n_years)
+  
+  pesticide_and_fertilizer_cost <-
+    pesticide_cost_n * farm_size_n * pesticide_frequency_n + fertilizer_amount_n *
+    fertilizer_cost_n
+  
+    overall_cost_cocoa <- pesticide_and_fertilizer_cost + labor_cost
+
+  #timber (additional)
+  seedlings_cost<-c(tree_seedlings*tree_density*farm_size)
+  transport_cost<-c(seedling_and_equipment_transport)
+  establishment_labor_cost<-c(labor_persons_establishment*(labor_price_n[1])*farm_size*
+                              3)
+  establishment_cost<-seedlings_cost+transport_cost+establishment_labor_cost
+  maintenance_labor_persons<-farm_size_n
+  maintenance_labor_cost<-maintenance_labor_persons*labor_price_n
+  harvest_cost<-(harvest_material+labor_persons_harvest*labor_price_n[n_years]*
+                   farm_size*3)/n_years_first_harvest
+  harvest_cost_n<-c(rep(0, n_years_first_harvest),vv(harvest_cost, 5, (n_years-n_years_first_harvest)))
+  
+  overall_cost_timber<-c(establishment_cost,maintenance_labor_cost[2:(n_years-1)],
+                         harvest_cost)
+#considering income
+  #cocoa
+  cocoa_harvest_n <- rep(0, n_years)
+  cocoa_harvest_n <- vv(cocoa_harvest, 5, n_years)
+  
+  cocoa_price_world_market_n <- rep(0, n_years)
+  cocoa_price_world_market_n <-c(cocoa_price_world_market_1, cocoa_price_world_market_2, cocoa_price_world_market_3, cocoa_price_world_market_4, cocoa_price_world_market_5, cocoa_price_world_market_6, cocoa_price_world_market_7, cocoa_price_world_market_8, cocoa_price_world_market_9, cocoa_price_world_market_10, cocoa_price_world_market_11, cocoa_price_world_market_12, cocoa_price_world_market_13, cocoa_price_world_market_14, cocoa_price_world_market_15, cocoa_price_world_market_16, cocoa_price_world_market_17, cocoa_price_world_market_18, cocoa_price_world_market_19, cocoa_price_world_market_20,cocoa_price_world_market_21, cocoa_price_world_market_22, cocoa_price_world_market_23, cocoa_price_world_market_24, cocoa_price_world_market_25, cocoa_price_world_market_26, cocoa_price_world_market_27, cocoa_price_world_market_28, cocoa_price_world_market_29, cocoa_price_world_market_30, cocoa_price_world_market_31, cocoa_price_world_market_32, cocoa_price_world_market_33, cocoa_price_world_market_34, cocoa_price_world_market_35, cocoa_price_world_market_36, cocoa_price_world_market_37, cocoa_price_world_market_38, cocoa_price_world_market_39, cocoa_price_world_market_40, cocoa_price_world_market_41, cocoa_price_world_market_42, cocoa_price_world_market_43, cocoa_price_world_market_44, cocoa_price_world_market_45, cocoa_price_world_market_46, cocoa_price_world_market_47, cocoa_price_world_market_48, cocoa_price_world_market_49, cocoa_price_world_market_50)
+
+  
+  cocoa_price_percent_farmgate_n <- rep(0, n_years)
+  cocoa_price_percent_farmgate_n <- vv(cocoa_price_percent_farmgate, 10, n_years)
+  pesticide_effect_n <- rep(0, n_years)
+  pesticide_effect_n <- rep(pesticide_effect, n_years)
+  pest_increase_rain_n <- rep(0, n_years)
+  pest_increase_rain_n <- rep(pest_increase_rain, n_years)
+  yield_impact<-c(vv(impact_trees_cocoa_establishment, 5, n_years_establishment),
+                  vv(impact_trees_cocoa, 10, n_years-n_years_establishment))
+  cocoa_farm_harvest_complete <-
+    farm_size_n * cocoa_harvest_n * dry_years * rainy_years * cocoa_pest_and_diseases*
+    (pesticide_frequency_n*                                           
+       pesticide_effect_n) * (fertilizer_amount_n * fertilizer_effect_n)*yield_impact
+    income_cocoa <- cocoa_farm_harvest_complete * cocoa_price_world_market_n *
+      cocoa_price_percent_farmgate_n
+  
+  #timber
+  dt_timber_diameter<-vv(tree_growth_diam, 5, n_years)
+  harvest_years <- n_years_first_harvest:n_years
+  harvest_diameter <- sapply(harvest_years, function(y) sum(dt_timber_diameter[1:y]))/10
+  dt_timber_height<-vv(tree_growth_height,5,n_years)
+  harvest_height<-sapply(harvest_years, function(y) sum(dt_timber_height[1:y]))
+  timber_cm3<-((farm_size*tree_density)/30)*(harvest_diameter/2)^2*pi*harvest_height
+  timber_m3<-timber_cm3/1000000
+  timber_price_n<-vv(tree_price, 20, n_years)
+  income_timber<-c(rep(0,n_years_first_harvest-1), c(timber_m3*timber_price_n[n_years_first_harvest:n_years])/30)
+  
+#creating final cashflows and distributions
+   final_cashflow <- (income_cocoa)+(income_timber) - (overall_cost_cocoa+overall_cost_timber)
+  # Generate the list of outputs from the Monte Carlo simulation
+  final_result <- sum(income_cocoa+income_timber - overall_cost_cocoa+overall_cost_timber)
+
+ return(list(final_result_af = final_result/559,
+             final_cashflow_af = final_cashflow/559))
 }
 
 #applying the decision support package
@@ -170,7 +737,7 @@ The result can be visualized in a density distribution.
 plot_distributions(
   mcSimulation_object = mc_simulation3,
   vars =c("final_result_af"),
-  method = "smooth_simple_overlay")
+  method = "boxplot_density")
 ```
 Alternatively, a cashflow can help to understand the general trends over the long development of n_years.
 ```{r}
@@ -187,5 +754,40 @@ mcSimulation_cocoa_income <- data.frame(mc_simulation3$x,
 evpi_cocoatimber <- multi_EVPI(mc = mcSimulation_cocoa_income, 
                    first_out_var = "final_result_af")
 plot_evpi(evpi_cocoatimber, decision_vars = "final_result_af")
+```
+
+```{r}
+options(scipen = 999)
+
+# store Mc simultation outputs
+sim1 <- mc_simulation2$y[1]
+sim2 <- mc_simulation3$y[1]
+
+sim1_df <- as.data.frame(sim1)
+sim2_df <- as.data.frame(sim2)
+
+# Make sure column names match
+names(sim2_df) <- names(sim1_df)
+
+# Add simulation label to both
+sim1_df$simulation <- "Sim 1"
+sim2_df$simulation <- "Sim 2"
+
+# Now bind them
+combined <- rbind(sim1_df, sim2_df)
+
+# Combine both
+combined <- rbind(sim1_df, sim2_df)
+
+# Convert to long format for ggplot
+library(reshape2)
+combined_long <- melt(combined, id.vars = "simulation")
+
+# Plot
+ggplot(combined_long, aes(x = value, fill = simulation)) +
+  geom_density(alpha = 0.5) +
+  facet_wrap(~ variable, scales = "free") +
+  labs(title = "Overlay of Distributions", x = "Value", y = "Density")
+
 ```
 
