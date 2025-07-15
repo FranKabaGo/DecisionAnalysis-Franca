@@ -6,6 +6,7 @@ output: pdf_document
 ---
 
 ```{r setup, include=FALSE}
+library(ggcorrplot)
 library(decisionSupport)
 library(ggplot2)
 library(kableExtra)
@@ -83,7 +84,7 @@ model_function_group52 <- function() {
   
   cocoa_harvest_30 <- rep(0, n_years)
   cocoa_harvest_30 <- vv(cocoa_harvest, 5, n_years)
-  
+  cocoa_price_world_market_n_alt<-vv(cocoa_price_world_market_1,30,n_years, relative_trend = inflation_rate_world)
 cocoa_price_world_market_n <-c(cocoa_price_world_market_1, cocoa_price_world_market_2, cocoa_price_world_market_3, cocoa_price_world_market_4, cocoa_price_world_market_5, cocoa_price_world_market_6, cocoa_price_world_market_7, cocoa_price_world_market_8, cocoa_price_world_market_9, cocoa_price_world_market_10, cocoa_price_world_market_11, cocoa_price_world_market_12, cocoa_price_world_market_13, cocoa_price_world_market_14, cocoa_price_world_market_15, cocoa_price_world_market_16, cocoa_price_world_market_17, cocoa_price_world_market_18, cocoa_price_world_market_19, cocoa_price_world_market_20,cocoa_price_world_market_21, cocoa_price_world_market_22, cocoa_price_world_market_23, cocoa_price_world_market_24, cocoa_price_world_market_25, cocoa_price_world_market_26, cocoa_price_world_market_27, cocoa_price_world_market_28, cocoa_price_world_market_29, cocoa_price_world_market_30, cocoa_price_world_market_31, cocoa_price_world_market_32, cocoa_price_world_market_33, cocoa_price_world_market_34, cocoa_price_world_market_35, cocoa_price_world_market_36, cocoa_price_world_market_37, cocoa_price_world_market_38, cocoa_price_world_market_39, cocoa_price_world_market_40, cocoa_price_world_market_41, cocoa_price_world_market_42, cocoa_price_world_market_43, cocoa_price_world_market_44, cocoa_price_world_market_45, cocoa_price_world_market_46, cocoa_price_world_market_47, cocoa_price_world_market_48, cocoa_price_world_market_49, cocoa_price_world_market_50)
   
   cocoa_price_percent_farmgate_30 <- rep(0, n_years)
@@ -205,7 +206,7 @@ Variables_intervention<- read.csv("Variables_Agroforestry_Timber_clean.csv", row
   
   cocoa_harvest_30 <- rep(0, n_years)
   cocoa_harvest_30 <- vv(cocoa_harvest, 5, n_years)
-  
+cocoa_price_world_market_n_alt<-vv(cocoa_price_world_market_1,30,n_years, relative_trend = inflation_rate_world)  
 cocoa_price_world_market_n <-c(cocoa_price_world_market_1, cocoa_price_world_market_2, cocoa_price_world_market_3, cocoa_price_world_market_4, cocoa_price_world_market_5, cocoa_price_world_market_6, cocoa_price_world_market_7, cocoa_price_world_market_8, cocoa_price_world_market_9, cocoa_price_world_market_10, cocoa_price_world_market_11, cocoa_price_world_market_12, cocoa_price_world_market_13, cocoa_price_world_market_14, cocoa_price_world_market_15, cocoa_price_world_market_16, cocoa_price_world_market_17, cocoa_price_world_market_18, cocoa_price_world_market_19, cocoa_price_world_market_20,cocoa_price_world_market_21, cocoa_price_world_market_22, cocoa_price_world_market_23, cocoa_price_world_market_24, cocoa_price_world_market_25, cocoa_price_world_market_26, cocoa_price_world_market_27, cocoa_price_world_market_28, cocoa_price_world_market_29, cocoa_price_world_market_30, cocoa_price_world_market_31, cocoa_price_world_market_32, cocoa_price_world_market_33, cocoa_price_world_market_34, cocoa_price_world_market_35, cocoa_price_world_market_36, cocoa_price_world_market_37, cocoa_price_world_market_38, cocoa_price_world_market_39, cocoa_price_world_market_40, cocoa_price_world_market_41, cocoa_price_world_market_42, cocoa_price_world_market_43, cocoa_price_world_market_44, cocoa_price_world_market_45, cocoa_price_world_market_46, cocoa_price_world_market_47, cocoa_price_world_market_48, cocoa_price_world_market_49, cocoa_price_world_market_50)
   
   cocoa_price_percent_farmgate_30 <- rep(0, n_years)
@@ -362,11 +363,27 @@ cocoa_price_world_market_n <-c(cocoa_price_world_market_1, cocoa_price_world_mar
   final_cashflow_cocoa<-income_cocoa-overall_cost_cocoa
   final_result_cocoa<-sum(income_cocoa)-sum(overall_cost_cocoa)
   
+#applying the discount function
+  discounted_income_cocoa<-discount(income_cocoa,inflation_rate_cameroon, n_years)
+  discounted_cost_cocoa<-discount(overall_cost_cocoa, inflation_rate_cameroon, n_years)
+  discounted_income_timber<-discount(income_timber, inflation_rate_cameroon, n_years)
+  discounted_cost_timber<-discount(overall_cost_timber, inflation_rate_cameroon, n_years)
+  
+  final_result_af_discounted<-discount(final_result, inflation_rate_cameroon, n_years)
+  final_result_cocoa_discounted<-discount( final_result_cocoa,inflation_rate_cameroon, n_years)
+  cashflow_cocoa_discounted<-discount(final_cashflow_cocoa,inflation_rate_cameroon, calculate_NPV = FALSE)
+  cashflow_af_discounted<-discount(final_cashflow, inflation_rate_cameroon, calculate_NPV = FALSE)
+  
 
  return(list(final_result_af = final_result/559,
              final_cashflow_af = final_cashflow/559,
              final_result_cocoa = final_result_cocoa/559,
-             final_cashflow_cocoa = final_cashflow_cocoa/559))
+             final_cashflow_cocoa = final_cashflow_cocoa/559,
+             final_result_af_discounted=final_result_af_discounted/559,
+             final_result_cocoa_discounted=final_result_cocoa_discounted/559,
+             cashflow_cocoa_discounted = cashflow_cocoa_discounted/559,
+             cashflow_af_discounted = cashflow_af_discounted/559
+            ))
 }
 
 #applying the decision support package
@@ -383,42 +400,53 @@ The result can be visualized in a density distribution.
 ```{r}
 plot_distributions(
   mcSimulation_object = mc_simulation3,
-  vars =c("final_result_af", "final_result_cocoa"),
-  method = "smooth_simple_overlay")
+  vars =c("final_result_af_discounted", "final_result_cocoa_discounted"),
+  method = "smooth_simple_overlay"
+  )
+losses_af<-mean(mc_simulation3[["y"]][["final_result_af_discounted"]]<=0)
+print(losses_af)
+losses_cocoa<-mean(mc_simulation3[["y"]][["final_result_cocoa_discounted"]]<=0)
+print(losses_cocoa)
+
+
 ```
 
 Alternatively, a cashflow can help to understand the general trends over the long development of n_years.
 ```{r}
-plot_cashflow(mcSimulation_object = mc_simulation3, cashflow_var_name = "final_cashflow_cocoa",  x_axis_name = "Years",
+plot_cashflow(mcSimulation_object = mc_simulation3, cashflow_var_name = "cashflow_cocoa_discounted",  x_axis_name = "Years",
               y_axis_name = "Annual cashflow in USD",
               color_25_75 = "lightblue", color_5_95 = "lavenderblush3",
               color_median = "purple")
-plot_cashflow(mcSimulation_object = mc_simulation3, cashflow_var_name = "final_cashflow_af",  x_axis_name = "Years",
+plot_cashflow(mcSimulation_object = mc_simulation3, cashflow_var_name = "cashflow_af_discounted",  x_axis_name = "Years",
               y_axis_name = "Annual cashflow in USD",
               color_25_75 = "skyblue", color_5_95 = "lavender",
               color_median = "violetred")
 ```
 ##Value of information report
 ```{r}
-mcSimulation_cocoa_income <- data.frame(mc_simulation3$x, 
-                                 mc_simulation3$y[52])
+mcSimulation_cocoa_income <- data.frame(mc_simulation3$x, mc_simulation3[["y"]][["final_result_cocoa_discounted"]]
+                                 )
+#note to myself, no idea why the column name is that weird,  but I don't care as long as it works
 
 evpi_cocoa <- multi_EVPI(mc = mcSimulation_cocoa_income, 
-                   first_out_var = "final_result_cocoa")
-plot_evpi(evpi_cocoa, decision_vars = "final_result_cocoa")
+                   first_out_var = "mc_simulation3...y......final_result_cocoa_discounted...")
+plot_evpi(evpi_cocoa, decision_vars = "mc_simulation3...y......final_result_cocoa_discounted...")
 
 mcSimulation_cocoa_timber <- data.frame(mc_simulation3$x, 
-                                 mc_simulation3$y[1])
+                                 mc_simulation3[["y"]][["final_result_af_discounted"]])
 
 evpi_cocoa_timber <- multi_EVPI(mc = mcSimulation_cocoa_timber, 
-                   first_out_var = "final_result_af")
-plot_evpi(evpi_cocoa_timber, decision_vars = "final_result_af")
+                   first_out_var = "mc_simulation3...y......final_result_af_discounted...")
+plot_evpi(evpi_cocoa_timber, decision_vars = "mc_simulation3...y......final_result_af_discounted...")
 ```
-##Impact pathways
 ```{r}
-
+correlation <- mcSimulation(estimate=as.estimate(Variables_intervention), 
+                                 model_function=model_function_group53, 
+                                 numberOfModelRuns=1000,
+                                 functionSyntax="plainNames")
+plot_distributions(correlation, "final_result_af_discounted")
+ggcorrplot(cor(correlation$x[1:30]))
 ```
-
 
 
 
