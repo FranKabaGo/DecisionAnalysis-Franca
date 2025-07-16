@@ -382,7 +382,8 @@ cocoa_price_world_market_n <-c(cocoa_price_world_market_1, cocoa_price_world_mar
              final_result_af_discounted=final_result_af_discounted/559,
              final_result_cocoa_discounted=final_result_cocoa_discounted/559,
              cashflow_cocoa_discounted = cashflow_cocoa_discounted/559,
-             cashflow_af_discounted = cashflow_af_discounted/559
+             cashflow_af_discounted = cashflow_af_discounted/559,
+             the_decision = (final_result_af_discounted-final_result_cocoa_discounted)/559
             ))
 }
 
@@ -408,6 +409,10 @@ print(losses_af)
 losses_cocoa<-mean(mc_simulation3[["y"]][["final_result_cocoa_discounted"]]<=0)
 print(losses_cocoa)
 
+plot_distributions(
+  mcSimulation_object = mc_simulation3,
+  vars =c("the_decision"),
+  method = "smooth_simple_overlay")
 
 ```
 
@@ -438,6 +443,12 @@ mcSimulation_cocoa_timber <- data.frame(mc_simulation3$x,
 evpi_cocoa_timber <- multi_EVPI(mc = mcSimulation_cocoa_timber, 
                    first_out_var = "mc_simulation3...y......final_result_af_discounted...")
 plot_evpi(evpi_cocoa_timber, decision_vars = "mc_simulation3...y......final_result_af_discounted...")
+
+mcSimulation_decision<-data.frame(mc_simulation3$x, mc_simulation3[["y"]][["the_decision"]]
+                                 )
+evpi_decision <- multi_EVPI(mc = mcSimulation_decision, 
+                   first_out_var = "mc_simulation3...y......the_decision...")
+plot_evpi(evpi_decision, decision_vars = "mc_simulation3...y......the_decision...")
 ```
 ```{r}
 correlation <- mcSimulation(estimate=as.estimate(Variables_intervention), 
