@@ -4,10 +4,10 @@ dry_year_incidence,0.001,NA,0.05,tnorm_0_1,Dry Year Incidence (probability),Like
 dry_year_damage,0.3,NA,0.6,tnorm_0_1,Dry Year Damage (yield loss fraction),Estimated fraction of yield lost due to dry years
 dry_year_damage_establishment,1.05,NA,1.2,posnorm,additional damage during dry years in establishment phase,NA
 dry_year_damage_established,0.4,NA,0.9,tnorm_0_1,reduced damage during dry years by shading,NA
-heavy_rainfall_incidence,0.1,NA,0.4,norm,Heavy Rainfall Incidence (probability),Probability of excessive rainfall during the season
+heavy_rainfall_incidence,0.1,NA,0.4,tnorm_0_1,Heavy Rainfall Incidence (probability),Probability of excessive rainfall during the season
 heavy_rainfall_damage,0.05,NA,0.4,tnorm_0_1,Heavy Rainfall Damage (yield loss or multiplier),Loss or increased disease risk from heavy rain
 heavy_rainfall_damage_established,0.7,NA,0.9,tnorm_0_1,reduced damage during heavy rain by throughpass/uptake/erosion protection,NA
-cocoa_pest_and_disease_incidence,0.8,NA,0.9,norm,Cocoa Pest and Disease Incidence (probability),Frequency of pest and disease occurrence
+cocoa_pest_and_disease_incidence,0.8,NA,0.9,tnorm_0_1,Cocoa Pest and Disease Incidence (probability),Frequency of pest and disease occurrence
 cocoa_pest_and_disease_damage,0.05,NA,0.8,tnorm_0_1,Cocoa Pest and Disease Damage (yield loss fraction),Yield loss caused by pests and diseases
 labor_price,30000,NA,60000,norm,Labor Price (CFA/month/person),Monthly wage per worker in CFA
 labor_persons_full_time,0,NA,2,norm,Full-time Labor (persons),Number of full-time workers employed year-round
@@ -17,7 +17,7 @@ fertilizer_amount,1,NA,1.01,norm,Fertilizer Amount (kg),Quantity of fertilizer a
 pesticide_cost,23000,NA,35000,norm,Pesticide Cost (CFA),Total cost of pesticide treatments based on farm size
 pesticide_frequency,5,NA,15,norm,Pesticide Frequency (treatments/year),Number of pesticide applications per year
 family_labor,1,NA,3,norm,Family Labor Cost (CFA/year),Estimated value of unpaid family labor annually
-cocoa_harvest,75,NA,600,norm,Cocoa Harvest (kg),Total annual cocoa yield (based on farm size)
+cocoa_harvest,150,NA,4000,norm,Cocoa Harvest (kg),Total annual cocoa yield (based on farm size)
 cocoa_price_percent_farmgate,0.45,NA,1.1,norm,Farmgate Price Share (fraction of world price),Portion of global price received by farmers
 pesticide_effect,1.01,NA,1.028,norm,pesticide efficiency,pesticide application effect on yield
 pest_increase_rain,1.1,NA,1.5,norm,rain effect on pest pressure,pest incidence increase after rain
