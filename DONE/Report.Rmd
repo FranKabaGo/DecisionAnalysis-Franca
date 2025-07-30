@@ -1,5 +1,5 @@
 ---
-title: "Modelling the Integration of Timber Agroforestry into Cocoa Monocultures in Cameroon Sud"
+title: "Advanced Timber"
 author: "Franca Kaba Gómez"
 date: "2025-07-07"
 output: 
@@ -387,8 +387,7 @@ cashflow_cocoa+labs(caption = "Figure 3: Cashflow simulation of cocoa monocultur
 
 Figure 3 compares the simulated annual cashflows for cocoa monoculture (final_cashflow_cocoa) and cocoa-timber agroforestry (final_cashflow_af). Both systems exhibit similar overall distributions, with wide uncertainty ranges spanning the 5th to 95th percentiles, reflecting inherent variability in market and production conditions. The median cashflow trajectory (purple line) for the agroforestry system starts at a lower point, but raises quickly and appears slightly higher than that of the monoculture from approximately year 10 onward, suggesting marginal long-term financial benefits associated with the diversified system. Notably, the interquartile range (25th to 75th percentile, lavender-blue area) is consistently wider in both systems, indicating substantial variation in expected outcomes across the simulation runs. However, the agroforestry system maintains slightly higher medians with no marked increase in downside risk. This combination results in 5th to 95th percentiles that seldomly reach below 0 from year 30, while this range reaches below 0 frequently in the cocoa monoculture plot.
 
-## Value of information report  
-
+##Value of information report
 ```{r evpi, include=FALSE}
 mcSimulation_cocoa_income <- data.frame(mc_simulation3$x, mc_simulation3[["y"]][["final_result_cocoa_discounted"]]
                                  )
@@ -486,5 +485,4 @@ Overall, the provided model demonstrates the capacity of the decisionSupport pac
   
     
   
-## Bibliography  
-
+## Bibliography
